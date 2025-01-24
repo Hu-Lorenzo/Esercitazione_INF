@@ -1,14 +1,14 @@
 from flask import Flask, render_template, redirect, url_for, request
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from flask_bcrypt import Bcrypt
-from models import db, Utente  # Importa db e Utente
-
+from models import db, Utente  
+from utilis import get_people_in_space
 app = Flask(__name__)
 app.secret_key = 'key_sessione_user'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
 
 bcrypt = Bcrypt(app)
-db.init_app(app)  # Inizializza l'istanza di SQLAlchemy con l'app
+db.init_app(app)  
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -16,10 +16,10 @@ login_manager.login_view = 'login'
 
 @login_manager.user_loader
 def load_user(user_id):
-    return Utente.query.get(int(user_id))  # Usa il campo `id` (o `id_user` se scegli la soluzione 2)
+    return Utente.query.get(int(user_id))  
 
 with app.app_context():
-    db.create_all()  # Crea le tabelle nel database
+    db.create_all()  
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -56,7 +56,8 @@ def login():
 @app.route('/home')
 @login_required
 def home():
-    return render_template('home.html', username=current_user.username)
+     people_in_space = get_people_in_space()
+     return render_template('home.html', username=current_user.username, people_in_space=people_in_space)
 
 @app.route('/logout')
 @login_required

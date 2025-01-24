@@ -3,6 +3,14 @@
 <body>
     <h2>Benvenuto, {{ username }}!</h2>
     <p>Questa è la tua home page.</p>
+
+    <h3>Persone attualmente nello spazio:</h3>
+    <ul>
+        {% for person in people_in_space %}
+            <li>{{ person.name }} - Veicolo: {{ person.craft }}</li>
+        {% endfor %}
+    </ul>
+
     <a href="{{ url_for('logout') }}">Logout</a>
 </body>
 </html>
